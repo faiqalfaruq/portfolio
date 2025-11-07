@@ -105,7 +105,7 @@
             <div class="resume-section-content">
                 <div class="d-flex align-items-center mb-5">
                     <h2 class="mb-0">ABOUT ME</h2>
-                    <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-about-btn">
+                    <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-about-btn">
                         <i class="fas fa-volume-up"></i>
                     </button>
                 </div>
@@ -136,7 +136,7 @@
             <div class="resume-section-content">
                 <div class="d-flex align-items-center mb-5">
                     <h2 class="mb-0">EXPERIENCE</h2>
-                    <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-experience-btn">
+                    <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-experience-btn">
                         <i class="fas fa-volume-up"></i>
                     </button>
                 </div>
@@ -240,7 +240,7 @@
             <div class="resume-section-content">
                 <div class="d-flex align-items-center mb-5">
                     <h2 class="mb-0">EDUCATION</h2>
-                    <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-education-btn">
+                    <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-education-btn">
                         <i class="fas fa-volume-up"></i>
                     </button>
                 </div>
@@ -291,7 +291,7 @@
             <div class="resume-section-content">
                 <div class="d-flex align-items-center mb-5">
                     <h2 class="mb-0">SKILLS</h2>
-                    <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-skills-btn">
+                    <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-skills-btn">
                         <i class="fas fa-volume-up"></i>
                     </button>
                 </div>
@@ -322,7 +322,7 @@
             <div class="resume-section-content">
                 <div class="d-flex align-items-center mb-5">
                     <h2 class="mb-0">CONTACT</h2>
-                    <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-contact-btn">
+                    <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-contact-btn">
                         <i class="fas fa-volume-up"></i>
                     </button>
                 </div>
@@ -513,8 +513,9 @@ $(window).on('load', function () {
         thisText();
     }
 
-    // Greeting Sound
-    setTimeout(function () {
+ // Greeting Sound
+setTimeout(function () {
+    if (window.innerWidth >= 768) { 
         $('#loading').fadeOut('slow', function () {
             $('#content').css('visibility', 'visible');
 
@@ -524,14 +525,23 @@ $(window).on('load', function () {
             speech.rate = 1.1;
             speech.pitch = 1;
 
-            if (maleVoice) {
-                speech.voice = maleVoice;
-            }
+            const voices = window.speechSynthesis.getVoices();
+            let maleVoice = voices.find(v =>
+                /ryan|daniel|james|brian|google uk english male|english male/i.test(v.name)
+            );
+            if (!maleVoice) maleVoice = voices.find(v => v.lang.startsWith('en'));
+            if (maleVoice) speech.voice = maleVoice;
 
             window.speechSynthesis.speak(speech);
             typeText();
         });
-    }, 2000);
+    } else {
+        $('#loading').fadeOut('slow', function () {
+            $('#content').css('visibility', 'visible');
+            typeText(); // Tanpa suara di mobile
+        });
+    }
+}, 2000);
 
 });
         
