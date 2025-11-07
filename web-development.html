@@ -848,21 +848,38 @@
             }
 
             // Greeting Sound
-            setTimeout(function () {
-                $('#loading').fadeOut('slow', function () {
-                    $('#content').css('visibility', 'visible');
-                    const welcomeText = "WEB DEVELOPMENT!";
-                    const speech = new SpeechSynthesisUtterance(welcomeText);
-                    speech.lang = "en-GB";
-                    speech.rate = 1;
-                    speech.pitch = 3;
-                    if (ryanVoice) {
-                        speech.voice = ryanVoice;
-                    }
-                    window.speechSynthesis.speak(speech);
-                    typeText();
-                });
-            }, 2000);
+setTimeout(function () {
+    if (window.innerWidth >= 768) { 
+        $('#loading').fadeOut('slow', function () {
+            $('#content').css('visibility', 'visible');
+
+            const welcomeText = "WEB DEVELOPMENT!";
+            const speech = new SpeechSynthesisUtterance(welcomeText);
+            speech.lang = "en-GB";
+            speech.rate = 1.1;
+            speech.pitch = 1; 
+
+            // Pilih voice laki-laki
+            const voices = window.speechSynthesis.getVoices();
+            let maleVoice = voices.find(v =>
+                /ryan|daniel|james|brian|google uk english male|english male/i.test(v.name)
+            );
+            if (!maleVoice) maleVoice = voices.find(v => v.lang.startsWith('en'));
+
+            if (maleVoice) {
+                speech.voice = maleVoice;
+            }
+
+            window.speechSynthesis.speak(speech);
+            typeText();
+        });
+    } else {
+        $('#loading').fadeOut('slow', function () {
+            $('#content').css('visibility', 'visible');
+            typeText();
+        });
+    }
+}, 2000);
 
         });
 
