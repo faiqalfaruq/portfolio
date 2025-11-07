@@ -94,7 +94,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">DIGMA</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-digma-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-digma-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -125,7 +125,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">METAVERS</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-metavers-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-metavers-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -156,7 +156,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">TROPIS COFFE</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-tropis-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-tropis-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -187,7 +187,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">KEHOSTING.IN</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-kehostingin-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-kehostingin-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -220,7 +220,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">MPAYMENT</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-mpayment-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-mpayment-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -250,7 +250,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">MIAW AUCTION</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-miawauction-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-miawauction-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -280,7 +280,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">SHIPLINK</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-shiplink-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-shiplink-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -414,21 +414,38 @@
             }
 
             // Greeting Sound
-            setTimeout(function () {
-                $('#loading').fadeOut('slow', function () {
-                    $('#content').css('visibility', 'visible');
-                    const welcomeText = "UI UX DESIGN!";
-                    const speech = new SpeechSynthesisUtterance(welcomeText);
-                    speech.lang = "en-GB";
-                    speech.rate = 1;
-                    speech.pitch = 3;
-                    if (ryanVoice) {
-                        speech.voice = ryanVoice;
-                    }
-                    window.speechSynthesis.speak(speech);
-                    typeText();
-                });
-            }, 2000);
+setTimeout(function () {
+    if (window.innerWidth >= 768) { 
+        $('#loading').fadeOut('slow', function () {
+            $('#content').css('visibility', 'visible');
+
+            const welcomeText = "UI UX DESIGN!";
+            const speech = new SpeechSynthesisUtterance(welcomeText);
+            speech.lang = "en-GB";
+            speech.rate = 1.1;
+            speech.pitch = 1; 
+
+            // Pilih voice laki-laki
+            const voices = window.speechSynthesis.getVoices();
+            let maleVoice = voices.find(v =>
+                /ryan|daniel|james|brian|google uk english male|english male/i.test(v.name)
+            );
+            if (!maleVoice) maleVoice = voices.find(v => v.lang.startsWith('en'));
+
+            if (maleVoice) {
+                speech.voice = maleVoice;
+            }
+
+            window.speechSynthesis.speak(speech);
+            typeText();
+        });
+    } else {
+        $('#loading').fadeOut('slow', function () {
+            $('#content').css('visibility', 'visible');
+            typeText();
+        });
+    }
+}, 2000);
 
         });
 
