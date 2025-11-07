@@ -79,11 +79,11 @@
         <!-- Hero -->
         <section class="resume-section" id="hero">
             <div id="particles-hero"></div>
-            <div class="spline-background">
-                <script type="module"
-                    src="https://unpkg.com/@splinetool/viewer@1.10.39/build/spline-viewer.js"></script>
-                <spline-viewer url="https://prod.spline.design/grY16M7tjTvR0kYV/scene.splinecode"></spline-viewer>
-            </div>
+           <div class="spline-background d-none d-md-block">
+    <script type="module"
+        src="https://unpkg.com/@splinetool/viewer@1.10.39/build/spline-viewer.js"></script>
+    <spline-viewer url="https://prod.spline.design/grY16M7tjTvR0kYV/scene.splinecode"></spline-viewer>
+</div>
             <div class="resume-section-content content-wrapper">
                 <h1 id="typedText" class="text-center text-md-start mb-2"></h1>
                 <!-- Mobile -->
@@ -476,75 +476,110 @@
     <!-- Native -->
     <script>
 
-        // Before Rendering Code
-        $(window).on('load', function () {
+// Before Rendering Code
+$(window).on('load', function () {
 
-            // Configuration Greeting Sound
-            let ryanVoice = null;
-            function loadVoices() {
-                const voices = speechSynthesis.getVoices();
-                ryanVoice = voices.find(voice => voice.name.toLowerCase().includes("ryan") && voice.lang === "en-GB");
+    let maleVoice = null;
+
+    function loadVoices() {
+        const voices = speechSynthesis.getVoices();
+        
+        maleVoice = voices.find(voice =>
+            /ryan|daniel|james|google uk english male|english male/i.test(voice.name)
+        );
+
+        if (!maleVoice) {
+            maleVoice = voices.find(voice => voice.lang.startsWith("en"));
+        }
+    }
+
+    speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    // Greeting Text
+    function typeText() {
+        const textIndo = "FAIQ AL FARUQ";
+        let index = 0;
+        const speed = 80;
+
+        function thisText() {
+            if (index < textIndo.length) {
+                $('#typedText').append(textIndo.charAt(index));
+                index++;
+                setTimeout(thisText, speed);
             }
-            speechSynthesis.onvoiceschanged = loadVoices;
-            loadVoices();
-
-            // Greeting Text
-            function typeText() {
-                const textIndo = "FAIQ AL FARUQ";
-                let index = 0;
-                const speed = 80;
-
-                function thisText() {
-                    if (index < textIndo.length) {
-                        $('#typedText').append(textIndo.charAt(index));
-                        index++;
-                        setTimeout(thisText, speed);
-                    }
-                }
-
-                thisText();
-            }
-
-            // Greeting Sound
-            setTimeout(function () {
-                $('#loading').fadeOut('slow', function () {
-                    $('#content').css('visibility', 'visible');
-                    const welcomeText = "Hi! I’m FAIQ AL FARUQ, a passionate Web Developer and UI UX Designer!";
-                    const speech = new SpeechSynthesisUtterance(welcomeText);
-                    speech.lang = "en-GB";
-                    speech.rate = 1.2;
-                    speech.pitch = 3;
-                    if (ryanVoice) {
-                        speech.voice = ryanVoice;
-                    }
-                    window.speechSynthesis.speak(speech);
-                    typeText();
-                });
-            }, 2000);
-
-        });
-
-        // Clean Text For Auto Read
-        function cleanText(rawText) {
-            return rawText
-                .replace(/\s+/g, ' ')
-                .trim();
         }
 
-        // Auto Read Text
-        let currentSpeech = null;
-        let currentButton = null;
-        let ryanVoice = null;
+        thisText();
+    }
 
-        // Configuration Sound
-        window.speechSynthesis.onvoiceschanged = function () {
-            const voices = window.speechSynthesis.getVoices();
-            ryanVoice = voices.find(voice =>
-                voice.name.toLowerCase().includes("ryan") &&
-                voice.lang === "en-GB"
-            );
-            console.log("Voice Ryan ditemukan:", ryanVoice);
-        };
+    // Greeting Sound
+    setTimeout(function () {
+        $('#loading').fadeOut('slow', function () {
+            $('#content').css('visibility', 'visible');
+
+            const welcomeText = "Hi! I’m FAIQ AL FARUQ, a passionate Web Developer and UI UX Designer!";
+            const speech = new SpeechSynthesisUtterance(welcomeText);
+            speech.lang = "en-GB";
+            speech.rate = 1.1;
+            speech.pitch = 1;
+
+            if (maleVoice) {
+                speech.voice = maleVoice;
+            }
+
+            window.speechSynthesis.speak(speech);
+            typeText();
+        });
+    }, 2000);
+
+});
+        
+       // Clean Text For Auto Read
+function cleanText(rawText) {
+    return rawText
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+// Auto Read Text
+let currentSpeech = null;
+let currentButton = null;
+let maleVoice = null;
+
+// Configuration Sound
+window.speechSynthesis.onvoiceschanged = function () {
+    const voices = window.speechSynthesis.getVoices();
+
+    maleVoice = voices.find(voice =>
+        /ryan|daniel|james|brian|google uk english male|english male/i.test(voice.name)
+    );
+
+    if (!maleVoice) {
+        maleVoice = voices.find(voice => voice.lang.startsWith("en"));
+    }
+
+    console.log("Voice laki-laki ditemukan:", maleVoice ? maleVoice.name : "Tidak ditemukan");
+};
+
+function speakText(text) {
+    if (currentSpeech) {
+        window.speechSynthesis.cancel();
+    }
+
+    const cleaned = cleanText(text);
+    const speech = new SpeechSynthesisUtterance(cleaned);
+    speech.lang = "en-GB";
+    speech.rate = 1.1;
+    speech.pitch = 1; 
+
+    if (maleVoice) {
+        speech.voice = maleVoice;
+    }
+
+    currentSpeech = speech;
+    window.speechSynthesis.speak(speech);
+}
 
         // Trigger Button
         function setupReadButton(buttonSelector, textSelector) {
@@ -578,14 +613,22 @@
                     return;
                 }
 
-                // Configuration Sound
-                const speech = new SpeechSynthesisUtterance(text);
-                speech.lang = "en-GB";
-                speech.rate = 1;
-                speech.pitch = 3;
-                if (ryanVoice) {
-                    speech.voice = ryanVoice;
-                }
+// Configuration Sound
+const speech = new SpeechSynthesisUtterance(text);
+speech.lang = "en-GB";
+speech.rate = 1.1;   
+speech.pitch = 1;   
+const voices = window.speechSynthesis.getVoices();
+let maleVoice = voices.find(voice =>
+    /ryan|daniel|james|brian|google uk english male|english male/i.test(voice.name)
+);
+if (!maleVoice) {
+    maleVoice = voices.find(voice => voice.lang.startsWith("en"));
+}
+if (maleVoice) {
+    speech.voice = maleVoice;
+}
+window.speechSynthesis.speak(speech);
 
                 // Icon Setting (Situation 2)
                 speech.onstart = function () {
