@@ -127,7 +127,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">KASIRKU</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-kasirku-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-kasirku-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -175,7 +175,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">KASKELASKU</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-kaskelasku-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-kaskelasku-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -220,7 +220,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">POKéMON</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-pokemon-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-pokemon-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -263,7 +263,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">RUANG DATA</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-ruangdata-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-ruangdata-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -311,7 +311,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">XI PPLG A</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-xipplga-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-xipplga-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -369,7 +369,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">KEHOSTING.IN</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-kehostingin-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-kehostingin-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -402,7 +402,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">MPAYMENT</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-mpayment-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-mpayment-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -432,7 +432,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">MIAW AUCTION</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-miawauction-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-miawauction-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -462,7 +462,7 @@
                 <div class="resume-section-content">
                     <div class="d-flex align-items-center mb-5">
                         <h2 class="mb-0">SHIPLINK</h2>
-                        <button class="btn btn-outline-dark btn-flat-b ms-4" id="read-shiplink-btn">
+                        <button class="btn btn-outline-dark btn-flat-b ms-4 d-none d-md-block" id="read-shiplink-btn">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
@@ -635,22 +635,38 @@
                 thisText();
             }
 
-            // Greeting Sound
-            setTimeout(function () {
-                $('#loading').fadeOut('slow', function () {
-                    $('#content').css('visibility', 'visible');
-                    const welcomeText = "Hi! I’m still FAIQ AL FARUQ, and this is my project!";
-                    const speech = new SpeechSynthesisUtterance(welcomeText);
-                    speech.lang = "en-GB";
-                    speech.rate = 1.2;
-                    speech.pitch = 3;
-                    if (ryanVoice) {
-                        speech.voice = ryanVoice;
-                    }
-                    window.speechSynthesis.speak(speech);
-                    typeText();
-                });
-            }, 2000);
+           // Greeting Sound
+setTimeout(function () {
+    if (window.innerWidth >= 768) {
+        $('#loading').fadeOut('slow', function () {
+            $('#content').css('visibility', 'visible');
+
+            const welcomeText = "Hi! I’m still FAIQ AL FARUQ, and this is my project!";
+            const speech = new SpeechSynthesisUtterance(welcomeText);
+            speech.lang = "en-GB";
+            speech.rate = 1.1;
+            speech.pitch = 1;
+
+            const voices = window.speechSynthesis.getVoices();
+            let maleVoice = voices.find(v =>
+                /ryan|daniel|james|brian|google uk english male|english male/i.test(v.name)
+            );
+            if (!maleVoice) maleVoice = voices.find(v => v.lang.startsWith('en'));
+
+            if (maleVoice) {
+                speech.voice = maleVoice;
+            }
+
+            window.speechSynthesis.speak(speech);
+            typeText();
+        });
+    } else {
+        $('#loading').fadeOut('slow', function () {
+            $('#content').css('visibility', 'visible');
+            typeText();
+        });
+    }
+}, 2000);
 
         });
 
